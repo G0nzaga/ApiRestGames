@@ -55,18 +55,22 @@
 overflow: hidden;
 background-color: darkgreen;
 
-background: rgba(0, 0, 0, 0.712);
-    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+background: rgba(0, 0, 0, 0);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.014);
     backdrop-filter: blur( 13.5px );
     -webkit-backdrop-filter: blur( 13.5px );
   
-    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    border: 1px solid rgba(255, 255, 255, 0);
+}
+
+.right{
+    float: right;
 }
 
 .topnav a {
 float: left;
 display: block;
-color: white;
+color: darkgreen;
 text-align: center;
 padding: 14px 16px;
 text-decoration: none;
@@ -78,10 +82,12 @@ background-color: #ddd;
 color: black;
 }
 
-/* .topnav a.active {
+.topnav a.active {
 background-color: #04AA6D;
 color: white;
-} */
+border-radius: 10px;
+margin-left: 10px;
+} 
 
 .topnav .icon {
 display: none;
