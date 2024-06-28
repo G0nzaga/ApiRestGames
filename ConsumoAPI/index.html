@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css.css">
+    <link rel="shortcut icon" href="./img/gamedois.svg" type="image/x-icon">
+    <title>Games.com</title>
+</head>
+<body>
+
+    <header>
+        <div class="topnav" id="myTopnav">
+            <a href="#home" class="active">Games.com</a>
+            <a href="#news">Vendas Games</a>
+            <a href="#contact">Contato</a>
+            <a href="#about">Sobre</a>
+            <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+              <i class="fa fa-bars"></i>
+            </a>
+          </div>
+    </header>
+
+
+    <div class="caixamaior">
+        
+        <div class="caixa-dois">
+            <h2 class="titulos">New Games</h2>
+            <input type="text" name="title" id="title" placeholder="Título"><br>
+            <input type="number" name="year" id="year" placeholder="Ano"><br>
+            <input type="number" name="price" id="price" placeholder="Preço"><br>
+            <button type="button" onclick="createGame()">Criar</button>
+        </div>
+
+        <div class="caixa-tres">
+            <h2 class="titulos">Editar Game</h2>
+            <input type="text" name="idEdit" id="idEdit" placeholder="ID" readonly><br>
+            <input type="text" name="titleEdit" id="titleEdit" placeholder="Título"><br>
+            <input type="number" name="yearEdit" id="yearEdit" placeholder="Ano"><br>
+            <input type="number" name="priceEdit" id="priceEdit" placeholder="Preço"><br>
+            <button type="button" onclick="updateGame()">Editar</button>
+        </div>
+
+        <div class="caixa-um">
+            <h2 class="titulo">Lista de Games</h2>
+            <ul id="games"></ul>
+        </div>
+    </div>
+    
+    
+    
+    
+</body>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+
+    function createGame(){
+        var titleInput = document.getElementById("title");
+        var yearInput = document.getElementById("year");
+        var priceInput = document.getElementById("price");
+        
+        //JSON
+        var  game = {
+
+            title: titleInput.value,
+            year: yearInput.value,
+            price: priceInput.value,
+
+        }
+
+        axios.post("http://localhost:5000/game", game).then(response =>{
+
+            if(response.status == 200){
+                alert("Game Cadastrado!")
+            }
+
+
+        }).catch(err =>{
+            console.log(err)
+        })
+
+        window.location.reload();
+
+    }
+
+    function deleteGame(listItem){
+        var id  = listItem.getAttribute("data-id")
+        axios.delete("http://localhost:5000/game/"+id).then(response =>{
+            alert("Game Deletado")
+        }).catch(err =>{
+            console.log(err)
+        })
+        window.location.reload();
+    }
+
+    function loadForm(listItem){
+        var id = listItem.getAttribute("data-id")
+        var title = listItem.getAttribute("data-title")
+        var year = listItem.getAttribute("data-year")
+        var price = listItem.getAttribute("data-price")
+        document.getElementById("idEdit").value = id
+        document.getElementById("titleEdit").value = title
+        document.getElementById("yearEdit").value = year
+        document.getElementById("priceEdit").value = price
+        
+    }
+
+    function updateGame(){
+
+        var idInput = document.getElementById("idEdit")
+        var titleInput = document.getElementById("titleEdit");
+        var yearInput = document.getElementById("yearEdit");
+        var priceInput = document.getElementById("priceEdit");
+
+        //JSON
+        var  game = {
+
+            title: titleInput.value,
+            year: yearInput.value,
+            price: priceInput.value,
+
+        }
+
+        var id = idInput.value
+
+        axios.put("http://localhost:5000/game/"+id, game).then(response =>{
+
+            if(response.status == 200){
+                alert("Game Atualizado!")
+            }
+
+
+        }).catch(err =>{
+            console.log(err)
+        })
+
+        window.location.reload();
+    }
+
+
+    axios.get("http://localhost:5000/games").then( response =>{
+        var games = response.data
+        var list = document.getElementById("games");
+
+        games.forEach(game =>{
+           var item  = document.createElement("h4")
+
+           item.setAttribute("data-id", game.id)
+           item.setAttribute("data-title", game.title)
+           item.setAttribute("data-year", game.year)
+           item.setAttribute("data-price", game.price)
+
+           item.innerHTML = game.id + " - " + game.title + " - R$ " + game.price;
+
+           var deleteBtn = document.createElement("button")
+           deleteBtn.innerHTML = "Deletar"
+           deleteBtn.style.backgroundColor = 'red'
+           deleteBtn.addEventListener("click", function(){
+                deleteGame(item)
+           })
+
+           var editBtn = document.createElement("button")
+           editBtn.innerHTML = "Editar"
+           editBtn.addEventListener("click", function(){
+            loadForm(item)
+           })
+            
+           item.appendChild(editBtn)
+            item.appendChild(deleteBtn)
+
+           list.appendChild(item)
+        })
+
+
+    }).catch(error =>{
+        console.log(error)
+    });
+
+    function myFunction(){
+        const x = document.getElementById("Menu")
+        if (x.className === "topnav"){
+            x.className += "responsive"
+        }else{
+            x.className = "topnav"
+        }
+    }
+</script>
+</html>
